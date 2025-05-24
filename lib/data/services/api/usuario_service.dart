@@ -13,7 +13,20 @@ class UsuarioService {
 
   final _log = Logger('UsuarioService');
 
-  AsyncResult<Usuario> getUsuario(String id) async {
+  AsyncResult<Usuario> getUsuarioLogado() async {
+    try {
+      final result = await _apiClient.get('$_path/logado');
+      return result.fold(
+        (value) => Success(Usuario.fromMap(value)),
+        Failure.new,
+      );
+    } on Exception catch (e) {
+      _log.severe('Falha ao buscar usuário por token: $e');
+      return Failure(e);
+    }
+  }
+
+  AsyncResult<Usuario> getUsuario(int id) async {
     try {
       final result = await _apiClient.get('$_path/$id');
       return result.fold(
@@ -39,9 +52,10 @@ class UsuarioService {
     }
   }
 
-  AsyncResult<Usuario> updateUsuario(String id, Usuario usuario) async {
+  AsyncResult<Usuario> updateUsuario(Usuario usuario) async {
     try {
-      final result = await _apiClient.put('$_path/$id', usuario.toMap());
+      final result =
+          await _apiClient.put(_path, usuario.toMap(), usuario.idUsuario);
       return result.fold(
         (success) => Success(Usuario.fromMap(success)),
         Failure.new,
@@ -52,7 +66,7 @@ class UsuarioService {
     }
   }
 
-  AsyncResult<Unit> deleteUsuario(String id) async {
-    return _apiClient.delete('$_path/$id');
+  AsyncResult<Unit> deleteUsuario(int id) async {
+    return _apiClient.delete(_path, id);
   }
 }

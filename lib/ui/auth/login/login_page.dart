@@ -50,14 +50,14 @@ class _LoginPageState extends State<LoginPage> {
         widget.viewModel.createUser.execute(
           UsuarioCreated(
             nome: _nameController.text,
-            email: _emailController.text,
+            email: _emailController.text.toLowerCase(),
             senha: _passwordController.text,
           ),
         );
       } else {
         widget.viewModel.login.execute(
           LoginRequest(
-            email: _emailController.text,
+            email: _emailController.text.toLowerCase(),
             password: _passwordController.text,
           ),
         );
@@ -235,6 +235,7 @@ class _LoginPageState extends State<LoginPage> {
           : () {
               setState(() {
                 _isCreated = !_isCreated;
+                _formKey.currentState!.reset();
               });
             },
       child: Text(
