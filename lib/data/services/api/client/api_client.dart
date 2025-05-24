@@ -21,6 +21,7 @@ class ApiClient {
     if (header != null) {
       headers.add(HttpHeaders.authorizationHeader, header);
     }
+    headers.contentType = ContentType.json;
   }
 
   String get _hostBase => 'http://localhost:8000/api/v1';
